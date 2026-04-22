@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kanban</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: monospace;
+      background: #0d0d0d;
+      color: #e8e8e8;
+      min-height: 100vh;
+      padding: 32px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 24px;
+      color: #c8f135;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .column {
+      background: #141414;
+      border: 1px solid #252525;
+      border-radius: 6px;
+      padding: 16px;
+      min-height: 300px;
+    }
+
+    .col-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+      color: #888;
+    }
+
+    .card {
+      background: #0d0d0d;
+      border: 1px solid #252525;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .card-title { font-size: 13px; margin-bottom: 4px; }
+    .card-desc  { font-size: 11px; color: #555; margin-bottom: 10px; }
+
+    .card-actions { display: flex; gap: 6px; }
+
+    button {
+      font-family: monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid #333;
+      background: transparent;
+      color: #888;
+      transition: all 0.15s;
+    }
+
+    button:hover { color: #e8e8e8; border-color: #e8e8e8; }
+    button.danger:hover { color: #ef4444; border-color: #ef4444; }
+
+    .add-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1px dashed #333;
+      color: #555;
+    }
+
+    .add-btn:hover { border-color: #c8f135; color: #c8f135; }
+  </style>
+</head>
+<body>
+  <h1>kanban</h1>
+
+  <div class="board">
+    <div class="column" id="todo">
+      <div class="col-title">todo</div>
+      <button class="add-btn" onclick="openAdd('todo')">+ add card</button>
+    </div>
+    <div class="column" id="doing">
+      <div class="col-title">doing</div>
+      <button class="add-btn" onclick="openAdd('doing')">+ add card</button>
+    </div>
+    <div class="column" id="done">
+      <div class="col-title">done</div>
+      <button class="add-btn" onclick="openAdd('done')">+ add card</button>
+    </div>
+  </div>
+
+  <script>
+    const COLUMNS = ['todo', 'doing', 'done']
+
+    // Load all cards on page load
+    async function loadCards() {
+      const res = await fetch('/cards')
+      const cards = await res.json()
+
+      // Clear existing cards
+      COLUMNS.forEach(col => {
+        const colEl = document.getElementById(col)
+        colEl.querySelectorAll('.card').forEach(c => c.remove())
+      })
+
+      // Render each card into its column
+      cards.forEach(card => renderCard(card))
+    }
+
+    function renderCard(card) {
+      const colEl = document.getElementById(card.column)
+      const addBtn = colEl.querySelector('.add-btn')
+
+      const el = document.createElement('div')
+      el.className = 'card'
+      el.innerHTML = `
+        <div class="card-title">${card.title}</div>
+        <div class="card-desc">${card.description}</div>
+        <div class="card-actions">
+          ${card.column !== 'todo'
+            ? `<button onclick="moveCard(${card.id}, '${prev(card.column)}')">← back</button>`
+            : ''}
+          ${card.column !== 'done'
+            ? `<button onclick="moveCard(${card.id}, '${next(card.column)}')">next →</button>`
+            : ''}
+          <button class="danger" onclick="deleteCard(${card.id})">delete</button>
+        </div>
+      `
+      colEl.insertBefore(el, addBtn)
+    }
+
+    function prev(col) {
+      return COLUMNS[COLUMNS.indexOf(col) - 1]
+    }
+
+    function next(col) {
+      return COLUMNS[COLUMNS.indexOf(col) + 1]
+    }
+
+    async function moveCard(id, column) {
+      await fetch(`/cards/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ column })
+      })
+      loadCards()
+    }
+
+    async function deleteCard(id) {
+      await fetch(`/cards/${id}`, { method: 'DELETE' })
+      loadCards()
+    }
+
+    function openAdd(column) {
+      const title = prompt('Card title:')
+      if (!title) return
+      const description = prompt('Description (optional):') || ''
+      createCard(title, description, column)
+    }
+
+    async function createCard(title, description, column) {
+      await fetch('/cards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, column })
+      })
+      loadCards()
+    }
+
+    // Init
+    loadCards()
+  </script>
+</body>
+</html>

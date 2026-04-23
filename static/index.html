@@ -15,12 +15,81 @@
       padding: 32px;
     }
 
-    h1 {
-      font-size: 20px;
-      margin-bottom: 24px;
-      color: #c8f135;
+    /* AUTH */
+    .auth-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: -32px;
     }
 
+    .auth-box { width: 100%; max-width: 360px; padding: 32px; }
+    .auth-title { font-size: 22px; color: #c8f135; margin-bottom: 8px; }
+    .auth-subtitle { font-size: 12px; color: #555; margin-bottom: 32px; }
+    .auth-field { margin-bottom: 14px; }
+    .auth-field label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #555; margin-bottom: 6px; }
+    .auth-field input {
+      width: 100%;
+      font-family: monospace;
+      font-size: 13px;
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #e8e8e8;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+      color-scheme: dark;
+    }
+    .auth-field input:focus { border-color: #c8f135; }
+    .auth-error { font-size: 12px; color: #ef4444; margin-top: 12px; min-height: 16px; }
+    .auth-toggle { font-size: 12px; color: #555; text-align: center; margin-top: 20px; }
+    .auth-toggle span { color: #c8f135; cursor: pointer; text-decoration: underline; }
+
+    /* APP */
+    .app-page { display: none; }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    h1 { font-size: 20px; color: #c8f135; }
+    .user-info { display: flex; align-items: center; gap: 12px; font-size: 12px; color: #888; }
+
+    /* Buttons */
+    button {
+      font-family: monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid #333;
+      background: transparent;
+      color: #888;
+      transition: all 0.15s;
+    }
+
+    button:hover { color: #e8e8e8; border-color: #e8e8e8; }
+    button.primary {
+      background: #c8f135;
+      border-color: #c8f135;
+      color: #0d0d0d;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      width: 100%;
+      margin-top: 8px;
+    }
+    button.primary:hover { background: #a8cc20; }
+    button.danger:hover { color: #ef4444; border-color: #ef4444; }
+    button.logout:hover { color: #ef4444; border-color: #ef4444; }
+
+    /* Board */
     .board {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -35,13 +104,7 @@
       min-height: 300px;
     }
 
-    .col-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 16px;
-      color: #888;
-    }
+    .col-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; color: #888; }
 
     .card {
       background: #0d0d0d;
@@ -49,27 +112,46 @@
       border-radius: 6px;
       padding: 12px;
       margin-bottom: 8px;
+      transition: border-color 0.15s;
     }
+
+    .card:hover { border-color: #333; }
 
     .card-title { font-size: 13px; margin-bottom: 4px; }
     .card-desc  { font-size: 11px; color: #555; margin-bottom: 10px; }
+    .card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 
-    .card-actions { display: flex; gap: 6px; }
-
-    button {
-      font-family: monospace;
-      font-size: 11px;
-      padding: 3px 8px;
+    /* Inline edit inputs */
+    .card-input {
+      width: 100%;
+      background: #141414;
+      border: 1px solid #c8f135;
       border-radius: 3px;
-      cursor: pointer;
-      border: 1px solid #333;
-      background: transparent;
-      color: #888;
-      transition: all 0.15s;
+      color: #e8e8e8;
+      font-family: monospace;
+      font-size: 13px;
+      padding: 6px 8px;
+      outline: none;
+      margin-bottom: 6px;
+      display: block;
     }
 
-    button:hover { color: #e8e8e8; border-color: #e8e8e8; }
-    button.danger:hover { color: #ef4444; border-color: #ef4444; }
+    .card-textarea {
+      width: 100%;
+      background: #141414;
+      border: 1px solid #333;
+      border-radius: 3px;
+      color: #888;
+      font-family: monospace;
+      font-size: 11px;
+      padding: 6px 8px;
+      outline: none;
+      resize: vertical;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .card-textarea:focus { border-color: #c8f135; }
 
     .add-btn {
       width: 100%;
@@ -77,44 +159,177 @@
       padding: 8px;
       border: 1px dashed #333;
       color: #555;
+      font-size: 12px;
     }
 
     .add-btn:hover { border-color: #c8f135; color: #c8f135; }
   </style>
 </head>
 <body>
-  <h1>kanban</h1>
 
-  <div class="board">
-    <div class="column" id="todo">
-      <div class="col-title">todo</div>
-      <button class="add-btn" onclick="openAdd('todo')">+ add card</button>
+  <!-- AUTH PAGE -->
+  <div class="auth-page" id="auth-page">
+    <div class="auth-box">
+      <div class="auth-title">kanban</div>
+      <div class="auth-subtitle" id="auth-subtitle">sign in to your account</div>
+
+      <div class="auth-field">
+        <label>Username</label>
+        <input type="text" id="auth-username" placeholder="yourname" autocomplete="username" />
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') submitAuth()" />
+      </div>
+
+      <div class="auth-error" id="auth-error"></div>
+      <button class="primary" onclick="submitAuth()" id="auth-btn">sign in</button>
+
+      <div class="auth-toggle" style="margin-top:20px">
+        <span id="auth-toggle-text">don't have an account? <span onclick="toggleAuthMode()">register</span></span>
+      </div>
     </div>
-    <div class="column" id="doing">
-      <div class="col-title">doing</div>
-      <button class="add-btn" onclick="openAdd('doing')">+ add card</button>
+  </div>
+
+  <!-- APP PAGE -->
+  <div class="app-page" id="app-page">
+    <div class="app-header">
+      <h1>kanban</h1>
+      <div class="user-info">
+        <span id="username-display"></span>
+        <button class="logout" onclick="logout()">logout</button>
+      </div>
     </div>
-    <div class="column" id="done">
-      <div class="col-title">done</div>
-      <button class="add-btn" onclick="openAdd('done')">+ add card</button>
+
+    <div class="board">
+      <div class="column" id="todo">
+        <div class="col-title">todo</div>
+        <button class="add-btn" onclick="openAdd('todo')">+ add card</button>
+      </div>
+      <div class="column" id="doing">
+        <div class="col-title">doing</div>
+        <button class="add-btn" onclick="openAdd('doing')">+ add card</button>
+      </div>
+      <div class="column" id="done">
+        <div class="col-title">done</div>
+        <button class="add-btn" onclick="openAdd('done')">+ add card</button>
+      </div>
     </div>
   </div>
 
   <script>
     const COLUMNS = ['todo', 'doing', 'done']
+    let token = localStorage.getItem('kanban_token')
+    let currentUsername = localStorage.getItem('kanban_username')
+    let isRegisterMode = false
 
-    // Load all cards on page load
+    if (token) showApp()
+    else showAuth()
+
+    // --- Auth ---
+    function showAuth() {
+      document.getElementById('auth-page').style.display = 'flex'
+      document.getElementById('app-page').style.display = 'none'
+    }
+
+    function showApp() {
+      document.getElementById('auth-page').style.display = 'none'
+      document.getElementById('app-page').style.display = 'block'
+      document.getElementById('username-display').textContent = currentUsername || ''
+      loadCards()
+    }
+
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode
+      document.getElementById('auth-btn').textContent = isRegisterMode ? 'register' : 'sign in'
+      document.getElementById('auth-subtitle').textContent = isRegisterMode ? 'create an account' : 'sign in to your account'
+      document.getElementById('auth-toggle-text').innerHTML = isRegisterMode
+        ? 'already have an account? <span onclick="toggleAuthMode()">sign in</span>'
+        : "don't have an account? <span onclick=\"toggleAuthMode()\">register</span>"
+      document.getElementById('auth-error').textContent = ''
+    }
+
+    async function submitAuth() {
+      const username = document.getElementById('auth-username').value.trim()
+      const password = document.getElementById('auth-password').value
+      if (!username || !password) {
+        document.getElementById('auth-error').textContent = 'username and password required'
+        return
+      }
+
+      if (isRegisterMode) {
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        })
+        if (!res.ok) {
+          const err = await res.json()
+          document.getElementById('auth-error').textContent = err.detail || 'registration failed'
+          return
+        }
+        isRegisterMode = false
+        await submitAuth()
+        return
+      }
+
+      const form = new URLSearchParams()
+      form.append('username', username)
+      form.append('password', password)
+
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form
+      })
+
+      if (!res.ok) {
+        document.getElementById('auth-error').textContent = 'incorrect username or password'
+        return
+      }
+
+      const data = await res.json()
+      token = data.access_token
+      localStorage.setItem('kanban_token', token)
+      localStorage.setItem('kanban_username', username)
+      currentUsername = username
+      showApp()
+    }
+
+    function logout() {
+      token = null
+      currentUsername = null
+      localStorage.removeItem('kanban_token')
+      localStorage.removeItem('kanban_username')
+      document.getElementById('auth-username').value = ''
+      document.getElementById('auth-password').value = ''
+      document.getElementById('auth-error').textContent = ''
+      isRegisterMode = false
+      document.getElementById('auth-btn').textContent = 'sign in'
+      document.getElementById('auth-subtitle').textContent = 'sign in to your account'
+      document.getElementById('auth-toggle-text').innerHTML = "don't have an account? <span onclick=\"toggleAuthMode()\">register</span>"
+      showAuth()
+    }
+
+    function authFetch(url, options = {}) {
+      return fetch(url, {
+        ...options,
+        headers: { ...(options.headers || {}), 'Authorization': `Bearer ${token}` }
+      })
+    }
+
+    // --- Cards ---
     async function loadCards() {
-      const res = await fetch('/cards')
+      const res = await authFetch('/cards')
+      if (res.status === 401) { logout(); return }
       const cards = await res.json()
 
-      // Clear existing cards
       COLUMNS.forEach(col => {
         const colEl = document.getElementById(col)
         colEl.querySelectorAll('.card').forEach(c => c.remove())
       })
 
-      // Render each card into its column
       cards.forEach(card => renderCard(card))
     }
 
@@ -124,32 +339,50 @@
 
       const el = document.createElement('div')
       el.className = 'card'
+      el.dataset.id = card.id
       el.innerHTML = `
         <div class="card-title">${card.title}</div>
-        <div class="card-desc">${card.description}</div>
+        <div class="card-desc">${card.description || ''}</div>
         <div class="card-actions">
-          ${card.column !== 'todo'
-            ? `<button onclick="moveCard(${card.id}, '${prev(card.column)}')">← back</button>`
-            : ''}
-          ${card.column !== 'done'
-            ? `<button onclick="moveCard(${card.id}, '${next(card.column)}')">next →</button>`
-            : ''}
+          ${card.column !== 'todo' ? `<button onclick="moveCard(${card.id}, '${prev(card.column)}')">← back</button>` : ''}
+          ${card.column !== 'done' ? `<button onclick="moveCard(${card.id}, '${next(card.column)}')">next →</button>` : ''}
+          <button onclick="editCard(${card.id}, '${card.title.replace(/'/g, "\\'")}', '${(card.description || '').replace(/'/g, "\\'")}')">edit</button>
           <button class="danger" onclick="deleteCard(${card.id})">delete</button>
         </div>
       `
       colEl.insertBefore(el, addBtn)
     }
 
-    function prev(col) {
-      return COLUMNS[COLUMNS.indexOf(col) - 1]
+    function editCard(id, title, description) {
+      const el = document.querySelector(`.card[data-id="${id}"]`)
+      el.innerHTML = `
+        <input class="card-input" type="text" id="edit-title-${id}" value="${title}" />
+        <textarea class="card-textarea" id="edit-desc-${id}" rows="2">${description}</textarea>
+        <div class="card-actions">
+          <button style="color:#c8f135;border-color:#c8f135;" onclick="saveCard(${id})">save</button>
+          <button onclick="loadCards()">cancel</button>
+        </div>
+      `
+      document.getElementById(`edit-title-${id}`).focus()
     }
 
-    function next(col) {
-      return COLUMNS[COLUMNS.indexOf(col) + 1]
+    async function saveCard(id) {
+      const title = document.getElementById(`edit-title-${id}`).value.trim()
+      const description = document.getElementById(`edit-desc-${id}`).value
+      if (!title) return
+      await authFetch(`/cards/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description })
+      })
+      loadCards()
     }
+
+    function prev(col) { return COLUMNS[COLUMNS.indexOf(col) - 1] }
+    function next(col) { return COLUMNS[COLUMNS.indexOf(col) + 1] }
 
     async function moveCard(id, column) {
-      await fetch(`/cards/${id}`, {
+      await authFetch(`/cards/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ column })
@@ -158,7 +391,8 @@
     }
 
     async function deleteCard(id) {
-      await fetch(`/cards/${id}`, { method: 'DELETE' })
+      const res = await authFetch(`/cards/${id}`, { method: 'DELETE' })
+      if (res.status === 401) { logout(); return }
       loadCards()
     }
 
@@ -170,16 +404,14 @@
     }
 
     async function createCard(title, description, column) {
-      await fetch('/cards', {
+      const res = await authFetch('/cards', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, description, column })
       })
+      if (res.status === 401) { logout(); return }
       loadCards()
     }
-
-    // Init
-    loadCards()
   </script>
 </body>
 </html>

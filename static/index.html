@@ -164,6 +164,42 @@
     }
 
     .add-btn:hover { border-color: #c8f135; color: #c8f135; }
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+
+      h1 { font-size: 16px; margin-bottom: 16px; }
+
+      .app-header { flex-wrap: wrap; gap: 8px; }
+
+      .user-info { gap: 8px; font-size: 11px; }
+
+      /* Stack columns vertically */
+      .board {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .column { min-height: 150px; padding: 12px; }
+
+      .col-title { margin-bottom: 10px; }
+
+      .card { padding: 10px; }
+      .card-title { font-size: 12px; }
+      .card-desc { font-size: 10px; }
+
+      .card-actions { flex-wrap: wrap; gap: 4px; }
+      .card-actions button { font-size: 10px; padding: 3px 7px; }
+
+      .add-btn { font-size: 11px; padding: 7px; }
+
+      /* Auth */
+      .auth-page { margin: -16px; }
+      .auth-box { padding: 24px 16px; }
+
+      /* Card inline edit */
+      .card-input, .card-textarea { font-size: 12px; }
+    }
   </style>
 </head>
 <body>

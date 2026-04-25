@@ -45,8 +45,9 @@
     .auth-field input:focus { border-color: #c8f135; }
     .auth-error { font-size: 12px; color: #ef4444; margin-top: 12px; min-height: 16px; }
     .auth-toggle { font-size: 12px; color: #555; text-align: center; margin-top: 20px; }
-    .auth-toggle span { color: #c8f135; cursor: pointer; text-decoration: underline; }
-
+    .auth-toggle span { color: #555; }
+    .auth-toggle span span { color: #888; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .auth-toggle span span:hover { color: #c8f135; }
     /* APP */
     .app-page { display: none; }
 
@@ -242,12 +243,19 @@
 
     function toggleAuthMode() {
       isRegisterMode = !isRegisterMode
-      document.getElementById('auth-btn').textContent = isRegisterMode ? 'register' : 'sign in'
-      document.getElementById('auth-subtitle').textContent = isRegisterMode ? 'create an account' : 'sign in to your account'
-      document.getElementById('auth-toggle-text').innerHTML = isRegisterMode
-        ? 'already have an account? <span onclick="toggleAuthMode()">sign in</span>'
-        : "don't have an account? <span onclick=\"toggleAuthMode()\">register</span>"
       document.getElementById('auth-error').textContent = ''
+      document.getElementById('auth-username').value = ''
+      document.getElementById('auth-password').value = ''
+
+      if (isRegisterMode) {
+        document.getElementById('auth-btn').textContent = 'register'
+        document.getElementById('auth-subtitle').textContent = 'create an account'
+        document.getElementById('auth-toggle-text').innerHTML = 'already have an account? <span onclick="toggleAuthMode()">sign in</span>'
+      } else {
+        document.getElementById('auth-btn').textContent = 'sign in'
+        document.getElementById('auth-subtitle').textContent = 'sign in to your account'
+        document.getElementById('auth-toggle-text').innerHTML = "don't have an account? <span onclick=\"toggleAuthMode()\">register</span>"
+      }
     }
 
     async function submitAuth() {

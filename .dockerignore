@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+kanban.db
+.git/
+*.pyc
+*.pyo

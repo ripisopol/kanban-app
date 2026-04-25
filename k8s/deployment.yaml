@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kanban-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kanban-app
+  template:
+    metadata:
+      labels:
+        app: kanban-app
+    spec:
+      containers:
+        - name: kanban-app
+          image: ghcr.io/ripisopol/kanban-app:latest
+          ports:
+            - containerPort: 8000
+          env:
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kanban-secret
+              key: SECRET_KEY
